@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { HashRouter, Routes, Route } from "react-router-dom";
+import { BlogPage } from "./BlogPage";
+import { HomePage } from "./HomePage";
+import { ProfilePage } from "./ProfilePage";
+import { Menu } from "./Menu";
+import { AuthProvider, AuthRoute} from './auth'
+import { BlogPost} from './BlogPost'
+import { LoginPage } from "./LoginPage";
+import { LogoutPage } from "./LogoutPage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <HashRouter>
+        <AuthProvider>
+          <Menu/>
+          <Routes>
+            <Route path="/" element={<HomePage/>}/>
+            <Route path="/blog" element={<BlogPage/>}>
+              <Route path=":slug" element={<BlogPost/>}/>
+            </Route>
+            <Route path="/profile" element={
+              <AuthRoute>
+                <ProfilePage/>
+              </AuthRoute>
+            }/>
+            <Route path="/login" element={<LoginPage/>}/>
+            <Route path="/logout" element={
+              <AuthRoute>
+                <LogoutPage/>
+              </AuthRoute>
+            }/>
+            <Route path="*" element={<p>Not Found</p>}/>
+          </Routes>
+        </AuthProvider>
+      </HashRouter>
+    </>
   );
 }
 
